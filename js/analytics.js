@@ -1,5 +1,5 @@
 /**
- * analytics.js — Chart.js charts (Editorial dark theme)
+ * analytics.js — Chart.js charts (Editorial cream theme)
  */
 let trendChart, distributionChart, volumeChart, ratingChart;
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 const chartDefaults = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
-const gridColor = 'rgba(255,255,255,0.06)';
+const gridColor = 'rgba(26,28,27,0.08)';
 
 function renderDistributionChart(data) {
   const ctx = document.getElementById('distributionChart');
@@ -34,10 +34,10 @@ function renderDistributionChart(data) {
     data: {
       labels: ['Positive','Neutral','Negative'],
       datasets: [{ data: [data.positive, data.neutral, data.negative],
-        backgroundColor: ['#34D399','#FBBF24','#F87171'], borderWidth: 3, borderColor: '#1A1C1B', hoverOffset: 8 }]
+        backgroundColor: ['#059669','#D97706','#DC2626'], borderWidth: 3, borderColor: '#F4F1EA', hoverOffset: 8 }]
     },
     options: { ...chartDefaults, cutout: '65%',
-      plugins: { legend: { display: true, position: 'bottom', labels: { padding: 16, font: { size: 12, family: 'Manrope' }, color: 'rgba(255,255,255,0.5)' } },
+      plugins: { legend: { display: true, position: 'bottom', labels: { padding: 16, font: { size: 12, family: 'Manrope' }, color: 'rgba(26,28,27,0.5)' } },
         tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/(data.total||1)*100)}%)` } } } }
   });
 }
@@ -51,15 +51,15 @@ function renderTrendChart(data) {
     data: {
       labels: data.map(d => d.label),
       datasets: [
-        { label: 'Positive', data: data.map(d => d.positive), borderColor: '#34D399', backgroundColor: 'rgba(52,211,153,0.05)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#34D399' },
-        { label: 'Neutral',  data: data.map(d => d.neutral),  borderColor: '#FBBF24', backgroundColor: 'rgba(251,191,36,0.05)',  tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#FBBF24' },
-        { label: 'Negative', data: data.map(d => d.negative), borderColor: '#F87171', backgroundColor: 'rgba(248,113,113,0.05)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#F87171' }
+        { label: 'Positive', data: data.map(d => d.positive), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.08)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#059669' },
+        { label: 'Neutral',  data: data.map(d => d.neutral),  borderColor: '#D97706', backgroundColor: 'rgba(217,119,6,0.08)',  tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#D97706' },
+        { label: 'Negative', data: data.map(d => d.negative), borderColor: '#DC2626', backgroundColor: 'rgba(220,38,38,0.08)', tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#DC2626' }
       ]
     },
     options: { ...chartDefaults,
-      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11, family: 'Manrope' }, color: 'rgba(255,255,255,0.5)' } } },
-      scales: { x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Manrope' } } },
-               y: { beginAtZero: true, grid: { color: gridColor }, ticks: { precision: 0, color: 'rgba(255,255,255,0.3)', font: { family: 'Manrope' } } } }
+      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11, family: 'Manrope' }, color: 'rgba(26,28,27,0.55)' } } },
+      scales: { x: { grid: { display: false }, ticks: { color: 'rgba(26,28,27,0.4)', font: { family: 'Manrope' } } },
+               y: { beginAtZero: true, grid: { color: gridColor }, ticks: { precision: 0, color: 'rgba(26,28,27,0.4)', font: { family: 'Manrope' } } } }
     }
   });
 }
@@ -73,11 +73,11 @@ function renderVolumeChart(data) {
     data: {
       labels: data.map(d => d.course.toUpperCase()),
       datasets: [{ label: 'Count', data: data.map(d => d.total),
-        backgroundColor: data.map(() => 'rgba(165,192,179,0.6)'), borderRadius: 2, borderSkipped: false }]
+        backgroundColor: data.map(() => 'rgba(109,139,123,0.6)'), borderRadius: 2, borderSkipped: false }]
     },
     options: { ...chartDefaults,
-      scales: { x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.35)', font: { family: 'Manrope', size: 11 } } },
-               y: { beginAtZero: true, grid: { color: gridColor }, ticks: { precision: 0, color: 'rgba(255,255,255,0.3)', font: { family: 'Manrope' } } } }
+      scales: { x: { grid: { display: false }, ticks: { color: 'rgba(26,28,27,0.45)', font: { family: 'Manrope', size: 11 } } },
+               y: { beginAtZero: true, grid: { color: gridColor }, ticks: { precision: 0, color: 'rgba(26,28,27,0.4)', font: { family: 'Manrope' } } } }
     }
   });
 }
@@ -92,12 +92,12 @@ function renderRatingChart(data) {
     data: {
       labels: data.map(d => labels[d.category] || d.category),
       datasets: [{ label: 'Avg Rating', data: data.map(d => d.avg_rating),
-        backgroundColor: data.map(d => d.avg_rating >= 4 ? '#34D399' : d.avg_rating >= 3 ? '#FBBF24' : '#F87171'),
+        backgroundColor: data.map(d => d.avg_rating >= 4 ? '#059669' : d.avg_rating >= 3 ? '#D97706' : '#DC2626'),
         borderRadius: 2, borderSkipped: false }]
     },
     options: { ...chartDefaults, indexAxis: 'y',
-      scales: { x: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.3)', font: { family: 'Manrope' } }, grid: { color: gridColor } },
-               y: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { family: 'Manrope' } } } }
+      scales: { x: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(26,28,27,0.4)', font: { family: 'Manrope' } }, grid: { color: gridColor } },
+               y: { grid: { display: false }, ticks: { color: 'rgba(26,28,27,0.55)', font: { family: 'Manrope' } } } }
     }
   });
 }
@@ -109,13 +109,15 @@ function renderInsights(summary, byCourse, byCategory) {
   const bestCat = cats[0], worstCat = cats[cats.length-1];
 
   const s = document.getElementById('insightStrengths');
-  if (s && best) s.innerHTML = `<ul class="space-y-2 text-sm text-emerald-300"><li>✅ <strong>${best.course.toUpperCase()}</strong> — highest rating (${best.avg_rating}★)</li><li>✅ <strong>${summary.positive_pct}%</strong> positive feedback</li>${bestCat?`<li>✅ <strong>${bestCat.category}</strong> rated best (${bestCat.avg_rating}★)</li>`:''}</ul>`;
+  if (s && best) s.innerHTML = `<ul class="space-y-2 text-sm text-emerald-700"><li>✅ <strong>${best.course.toUpperCase()}</strong> — highest rating (${best.avg_rating}★)</li><li>✅ <strong>${summary.positive_pct}%</strong> positive feedback</li>${bestCat?`<li>✅ <strong>${bestCat.category}</strong> rated best (${bestCat.avg_rating}★)</li>`:''}</ul>`;
+  else if (s) s.innerHTML = '<p class="text-charcoal/40">Not enough data yet.</p>';
 
   const i = document.getElementById('insightImprove');
-  if (i && worst) i.innerHTML = `<ul class="space-y-2 text-sm text-amber-300"><li>⚠️ <strong>${worst.course.toUpperCase()}</strong> — lowest rating (${worst.avg_rating}★)</li><li>⚠️ <strong>${summary.negative_pct}%</strong> negative feedback</li>${worstCat?`<li>⚠️ <strong>${worstCat.category}</strong> lowest rated (${worstCat.avg_rating}★)</li>`:''}</ul>`;
+  if (i && worst) i.innerHTML = `<ul class="space-y-2 text-sm text-amber-700"><li>⚠️ <strong>${worst.course.toUpperCase()}</strong> — lowest rating (${worst.avg_rating}★)</li><li>⚠️ <strong>${summary.negative_pct}%</strong> negative feedback</li>${worstCat?`<li>⚠️ <strong>${worstCat.category}</strong> lowest rated (${worstCat.avg_rating}★)</li>`:''}</ul>`;
+  else if (i) i.innerHTML = '<p class="text-charcoal/40">Not enough data yet.</p>';
 
   const r = document.getElementById('insightRecs');
-  if (r) r.innerHTML = `<ul class="space-y-2 text-sm text-sage-light"><li>📌 Focus on <strong>${worst?.course?.toUpperCase()||'low-rated courses'}</strong></li><li>📌 Replicate patterns from <strong>${best?.course?.toUpperCase()||'top courses'}</strong></li><li>📌 Schedule regular feedback cycles</li><li>📌 Target <strong>${worstCat?.category||'key areas'}</strong> training</li></ul>`;
+  if (r) r.innerHTML = `<ul class="space-y-2 text-sm text-sage-darker"><li>📌 Focus on <strong>${worst?.course?.toUpperCase()||'low-rated courses'}</strong></li><li>📌 Replicate patterns from <strong>${best?.course?.toUpperCase()||'top courses'}</strong></li><li>📌 Schedule regular feedback cycles</li><li>📌 Target <strong>${worstCat?.category||'key areas'}</strong> training</li></ul>`;
 }
 
 function renderPieLegend(data) {

@@ -9,7 +9,7 @@ html { scroll-behavior: smooth; }
 
 /* ─── Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #1A1C1B; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #A5C0B3; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #8DAA9D; }
 

@@ -31,7 +31,7 @@ async function setup() {
 
   console.log('✅ Database "student_feedback_db" created!');
   console.log('✅ Tables "users" and "feedbacks" created!');
-  console.log('✅ Seed feedback data inserted (8 sample rows)!');
+  console.log('✅ Feedbacks table ready (starts empty)!');
 
   // ─── Seed Users with bcrypt-hashed passwords ────────────────────────────
   console.log('\n👤 Seeding user accounts...');

@@ -79,10 +79,14 @@ router.get('/', requireAuth, async (req, res) => {
     const params = [];
 
     // Teacher role: restrict to their courses only
-    if (user.role === 'teacher' && user.courses && user.courses.length > 0) {
-      const placeholders = user.courses.map(() => '?').join(',');
-      sql += ` AND course IN (${placeholders})`;
-      params.push(...user.courses);
+    if (user.role === 'teacher') {
+      if (user.courses && user.courses.length > 0) {
+        const placeholders = user.courses.map(() => '?').join(',');
+        sql += ` AND course IN (${placeholders})`;
+        params.push(...user.courses);
+      } else {
+        sql += ' AND 1=0'; // teacher with no courses sees nothing
+      }
     }
 
     if (course && course !== 'all') {

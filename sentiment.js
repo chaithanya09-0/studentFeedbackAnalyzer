@@ -7,23 +7,23 @@ const fetch = require('node-fetch');
 
 // ─── Keyword Dictionaries ────────────────────────────────────────────────────
 const POSITIVE_WORDS = [
-  'excellent','amazing','outstanding','brilliant','fantastic','great','good',
-  'wonderful','superb','love','loved','enjoyed','helpful','clear','engaging',
-  'informative','fun','easy','intuitive','efficient','professional','knowledgeable',
-  'supportive','inspiring','motivating','recommend','best','perfect','awesome',
-  'impressive','thorough','well structured','well-structured','learned','useful',
-  'rewarding','challenging','interesting','passionate','dedicated','talented'
+  'excellent', 'amazing', 'outstanding', 'brilliant', 'fantastic', 'great', 'good',
+  'wonderful', 'superb', 'love', 'loved', 'enjoyed', 'helpful', 'clear', 'engaging',
+  'informative', 'fun', 'easy', 'intuitive', 'efficient', 'professional', 'knowledgeable',
+  'supportive', 'inspiring', 'motivating', 'recommend', 'best', 'perfect', 'awesome',
+  'impressive', 'thorough', 'well structured', 'well-structured', 'learned', 'useful',
+  'rewarding', 'challenging', 'interesting', 'passionate', 'dedicated', 'talented'
 ];
 
 const NEGATIVE_WORDS = [
-  'terrible','awful','horrible','bad','poor','worst','boring','confusing',
-  'unclear','useless','waste','difficult','hard','frustrating','disappointed',
-  'disappointing','slow','late','rude','unprofessional','unprepared','vague',
-  'disorganized','irrelevant','outdated','never answered','ignored','failed',
-  'missed','absent','lazy','pathetic','dreadful','unacceptable'
+  'terrible', 'awful', 'horrible', 'bad', 'poor', 'worst', 'boring', 'confusing',
+  'unclear', 'useless', 'waste', 'difficult', 'hard', 'frustrating', 'disappointed',
+  'disappointing', 'slow', 'late', 'rude', 'unprofessional', 'unprepared', 'vague',
+  'disorganized', 'irrelevant', 'outdated', 'never answered', 'ignored', 'failed',
+  'missed', 'absent', 'lazy', 'pathetic', 'dreadful', 'unacceptable'
 ];
 
-const NEGATION_WORDS = ['not','no','never','hardly','barely','rarely','doesn\'t','don\'t','wasn\'t','weren\'t','isn\'t'];
+const NEGATION_WORDS = ['not', 'no', 'never', 'hardly', 'barely', 'rarely', 'doesn\'t', 'don\'t', 'wasn\'t', 'weren\'t', 'isn\'t'];
 
 // ─── Rule-Based Engine ───────────────────────────────────────────────────────
 function analyzeRuleBased(text, rating = 3) {
@@ -46,13 +46,13 @@ function analyzeRuleBased(text, rating = 3) {
 
   let sentiment, confidence;
   if (combined > 0.15) {
-    sentiment  = 'positive';
+    sentiment = 'positive';
     confidence = Math.min(0.5 + combined * 0.5, 0.99);
   } else if (combined < -0.15) {
-    sentiment  = 'negative';
+    sentiment = 'negative';
     confidence = Math.min(0.5 + Math.abs(combined) * 0.5, 0.99);
   } else {
-    sentiment  = 'neutral';
+    sentiment = 'neutral';
     confidence = 0.5 + (0.15 - Math.abs(combined));
   }
 
@@ -68,10 +68,10 @@ async function analyzeML(text) {
     const response = await fetch(
       'https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english',
       {
-        method:  'POST',
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type':  'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ inputs: text.slice(0, 512) }),
         timeout: 5000
@@ -85,9 +85,9 @@ async function analyzeML(text) {
     if (!Array.isArray(data) || !data[0]) return null;
 
     const results = data[0];
-    const best    = results.reduce((a, b) => a.score > b.score ? a : b);
-    const label   = best.label.toLowerCase(); // 'positive' or 'negative'
-    const score   = parseFloat(best.score.toFixed(2));
+    const best = results.reduce((a, b) => a.score > b.score ? a : b);
+    const label = best.label.toLowerCase(); // 'positive' or 'negative'
+    const score = parseFloat(best.score.toFixed(2));
 
     // Map to our 3-class system: score > 0.75 → positive/negative, else neutral
     let sentiment;
