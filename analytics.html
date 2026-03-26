@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics — Feedback Analyzer</title>
+  <meta name="description" content="Live sentiment analytics with Chart.js charts and AI insights.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="tailwind-theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-charcoal text-white font-sans min-h-screen">
+
+  <!-- Nav (cream) -->
+  <nav class="bg-cream border-b border-charcoal/8 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="index.html" class="font-sans font-semibold text-sm uppercase tracking-[0.2em] text-charcoal">Feedback Analyzer</a>
+      <ul class="hidden md:flex items-center gap-8 text-sm">
+        <li><a href="index.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Home</a></li>
+        <li><a href="submit-feedback.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Submit&nbsp;Feedback</a></li>
+        <li><a href="dashboard.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Dashboard</a></li>
+        <li><a href="analytics.html" class="text-charcoal font-semibold">Analytics</a></li>
+        <li><a href="about.html" class="text-charcoal/50 hover:text-charcoal transition-colors">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-charcoal pt-10 pb-6 border-b border-white/8">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="section-marker text-white/30 mb-4">
+        <span>(01)</span>
+        <span>Analytics</span>
+      </div>
+      <h1 class="font-serif text-4xl md:text-5xl uppercase tracking-tight text-white">
+        Feedback Analytics<br><span class="italic">&amp; Trends</span>
+      </h1>
+      <p class="text-white/40 text-sm mt-2">All charts populate in real-time from your MySQL database</p>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-6 py-8 space-y-6">
+
+    <!-- Row 1 -->
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="border border-white/8 p-6">
+        <h3 class="font-serif text-xl text-white italic mb-1">Sentiment Trend Over Time</h3>
+        <p class="text-xs text-white/30 mb-5">Last 6 months</p>
+        <div class="chart-container"><canvas id="trendChart"></canvas></div>
+        <p class="chart-error hidden text-xs text-red-400 text-center mt-3">Could not load data — is the server running?</p>
+      </div>
+      <div class="border border-white/8 p-6">
+        <h3 class="font-serif text-xl text-white italic mb-1">Sentiment Distribution</h3>
+        <p class="text-xs text-white/30 mb-5">All feedback to date</p>
+        <div class="chart-container" style="height:220px"><canvas id="distributionChart"></canvas></div>
+        <div class="flex justify-center gap-8 mt-4 text-sm">
+          <div class="text-center"><div class="font-semibold text-emerald-400" id="positivePiePct">—</div><div class="text-white/30 text-xs">Positive</div></div>
+          <div class="text-center"><div class="font-semibold text-amber-400" id="neutralPiePct">—</div><div class="text-white/30 text-xs">Neutral</div></div>
+          <div class="text-center"><div class="font-semibold text-red-400" id="negativePiePct">—</div><div class="text-white/30 text-xs">Negative</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="border border-white/8 p-6">
+        <h3 class="font-serif text-xl text-white italic mb-1">Feedback Volume by Course</h3>
+        <p class="text-xs text-white/30 mb-5">Total submissions per course</p>
+        <div class="chart-container"><canvas id="volumeChart"></canvas></div>
+      </div>
+      <div class="border border-white/8 p-6">
+        <h3 class="font-serif text-xl text-white italic mb-1">Average Rating by Category</h3>
+        <p class="text-xs text-white/30 mb-5">Scale: 1–5 · Color: 🟢 ≥4 🟡 ≥3 🔴 &lt;3</p>
+        <div class="chart-container"><canvas id="ratingChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="border border-white/8 p-6">
+      <h2 class="font-serif text-2xl text-white italic mb-6">Key Insights &amp; Recommendations</h2>
+      <div class="grid md:grid-cols-3 gap-px bg-white/8">
+        <div class="bg-charcoal p-6">
+          <h4 class="font-semibold text-emerald-400 text-sm uppercase tracking-wider mb-3">✅ Strengths</h4>
+          <div id="insightStrengths" class="text-sm text-white/55">Loading…</div>
+        </div>
+        <div class="bg-charcoal p-6">
+          <h4 class="font-semibold text-amber-400 text-sm uppercase tracking-wider mb-3">⚠️ Improvements</h4>
+          <div id="insightImprove" class="text-sm text-white/55">Loading…</div>
+        </div>
+        <div class="bg-charcoal p-6">
+          <h4 class="font-semibold text-sage text-sm uppercase tracking-wider mb-3">📌 Recommendations</h4>
+          <div id="insightRecs" class="text-sm text-white/55">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="border border-white/8 p-6 text-center">
+      <h3 class="font-serif text-xl text-white italic mb-2">Export Reports</h3>
+      <p class="text-white/35 text-sm mb-5">Download your analysis data</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button onclick="window.print()" class="bg-sage text-charcoal px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-sage-dark transition-colors">📄 Print / PDF</button>
+        <button id="exportCSV" class="border border-white/15 text-white/60 hover:text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-colors">📊 Export CSV</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal border-t border-white/5 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <p class="text-white/30 text-sm">© 2026 Student Feedback Analyzer · Built with Node.js, MySQL &amp; ❤️</p>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/analytics.js"></script>
+  <script>
+    document.getElementById('exportCSV')?.addEventListener('click', async () => {
+      try {
+        const res = await apiFetch('/feedback?limit=1000');
+        const rows = res.data;
+        if (!rows.length) return alert('No data to export.');
+        const headers = ['ID','Student Name','Student ID','Course','Instructor','Category','Rating','Feedback','Anonymous','Sentiment','Score','Source','Date'];
+        const csv = [headers.join(','), ...rows.map(r => [
+          r.id, `"${r.student_name}"`, r.student_id, r.course, `"${r.instructor}"`,
+          r.category, r.rating, `"${r.feedback_text.replace(/"/g,'""')}"`,
+          r.is_anonymous ? 'Yes' : 'No', r.sentiment, r.sentiment_score, r.sentiment_source,
+          new Date(r.created_at).toLocaleDateString()
+        ].join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'feedback_export.csv' });
+        a.click();
+      } catch(e) { alert('Export failed: ' + e.message); }
+    });
+  </script>
+</body>
+</html>

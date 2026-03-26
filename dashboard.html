@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Feedback Analyzer</title>
+  <meta name="description" content="Live feedback dashboard with sentiment analysis and category breakdown.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="tailwind-theme.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-cream text-charcoal font-sans min-h-screen">
+
+  <!-- Nav (cream) -->
+  <nav class="bg-cream border-b border-charcoal/8 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="index.html" class="font-sans font-semibold text-sm uppercase tracking-[0.2em] text-charcoal">Feedback Analyzer</a>
+      <ul class="hidden md:flex items-center gap-8 text-sm">
+        <li><a href="index.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Home</a></li>
+        <li><a href="submit-feedback.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Submit&nbsp;Feedback</a></li>
+        <li><a href="dashboard.html" class="text-charcoal font-semibold">Dashboard</a></li>
+        <li><a href="analytics.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Analytics</a></li>
+        <li><a href="about.html" class="text-charcoal/50 hover:text-charcoal transition-colors">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-cream pt-16 pb-10">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
+      <div>
+        <div class="section-marker text-charcoal/35 mb-4">
+          <span>(01)</span>
+          <span>Dashboard</span>
+        </div>
+        <h1 class="font-serif text-5xl md:text-6xl uppercase tracking-tight text-charcoal">
+          Feedback<br><span class="italic">Dashboard</span>
+        </h1>
+        <p class="text-charcoal/50 text-sm mt-2" id="dashboardSubtitle">Live data from your MySQL database</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <select id="courseFilter"
+                class="bg-white border border-charcoal/12 text-charcoal px-4 py-2.5 text-sm focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage">
+          <option value="all">All Courses</option>
+          <option value="oop">CS301 - OOP</option>
+          <option value="os">CS302 - OS</option>
+          <option value="cn">CS303 - CN</option>
+          <option value="aiml">CS401 - AIML</option>
+          <option value="ml">CS402 - ML</option>
+          <option value="dbms">CS304 - DBMS</option>
+          <option value="dsa">CS201 - DSA</option>
+          <option value="se">CS403 - SE</option>
+          <option value="cc">CS404 - CC</option>
+        </select>
+        <select id="dayFilter"
+                class="bg-white border border-charcoal/12 text-charcoal px-4 py-2.5 text-sm focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage">
+          <option value="">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="90">Last 3 Months</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-6 py-8 space-y-6">
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-charcoal/10 border border-charcoal/10">
+      <div class="bg-cream p-6">
+        <p class="text-xs text-charcoal/40 uppercase tracking-wider">Total</p>
+        <p class="text-3xl font-serif font-light text-charcoal mt-1" id="totalCount">—</p>
+      </div>
+      <div class="bg-cream p-6">
+        <p class="text-xs text-emerald-600 uppercase tracking-wider">😊 Positive</p>
+        <p class="text-3xl font-serif font-light text-emerald-600 mt-1" id="posCount">—</p>
+        <p class="text-xs text-charcoal/35 mt-1" id="posPct">—</p>
+      </div>
+      <div class="bg-cream p-6">
+        <p class="text-xs text-amber-600 uppercase tracking-wider">😐 Neutral</p>
+        <p class="text-3xl font-serif font-light text-amber-600 mt-1" id="neuCount">—</p>
+        <p class="text-xs text-charcoal/35 mt-1" id="neuPct">—</p>
+      </div>
+      <div class="bg-cream p-6">
+        <p class="text-xs text-red-600 uppercase tracking-wider">😞 Negative</p>
+        <p class="text-3xl font-serif font-light text-red-600 mt-1" id="negCount">—</p>
+        <p class="text-xs text-charcoal/35 mt-1" id="negPct">—</p>
+      </div>
+    </div>
+
+    <!-- Two columns -->
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="border border-charcoal/10 p-6 bg-white/50">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-serif text-xl text-charcoal italic">Recent Feedback</h3>
+          <a href="analytics.html" class="text-xs text-sage-darker hover:text-sage-dark transition-colors">View Analytics →</a>
+        </div>
+        <div id="feedbackList" class="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+          <div class="text-center text-charcoal/30 py-10 text-sm">Loading…</div>
+        </div>
+      </div>
+      <div class="border border-charcoal/10 p-6 bg-white/50">
+        <h3 class="font-serif text-xl text-charcoal italic mb-5">Category Breakdown</h3>
+        <div id="categoryList" class="space-y-4">
+          <div class="text-center text-charcoal/30 py-10 text-sm">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avg Rating -->
+    <div class="border border-charcoal/10 p-6 flex items-center gap-6 bg-white/50">
+      <div class="text-4xl">⭐</div>
+      <div>
+        <p class="text-xs text-charcoal/40 uppercase tracking-wider">Average Rating</p>
+        <p class="text-4xl font-serif font-light text-charcoal" id="avgRating">—</p>
+      </div>
+      <div class="ml-auto text-right">
+        <p class="text-xs text-charcoal/40 uppercase tracking-wider">Courses Tracked</p>
+        <p class="text-4xl font-serif font-light text-sage-darker" id="coursesCount">—</p>
+      </div>
+    </div>
+
+    <!-- Course Table -->
+    <div class="border border-charcoal/10 p-6 bg-white/50">
+      <h3 class="font-serif text-xl text-charcoal italic mb-5">Top Courses by Feedback Volume</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-charcoal/10">
+              <th class="px-4 py-3 text-left text-xs uppercase tracking-wider text-charcoal/45 font-medium">Course</th>
+              <th class="px-4 py-3 text-center text-xs uppercase tracking-wider text-charcoal/45 font-medium">Total</th>
+              <th class="px-4 py-3 text-center text-xs uppercase tracking-wider text-charcoal/45 font-medium">Positive</th>
+              <th class="px-4 py-3 text-center text-xs uppercase tracking-wider text-charcoal/45 font-medium">Neutral</th>
+              <th class="px-4 py-3 text-center text-xs uppercase tracking-wider text-charcoal/45 font-medium">Negative</th>
+              <th class="px-4 py-3 text-center text-xs uppercase tracking-wider text-charcoal/45 font-medium">Avg Rating</th>
+            </tr>
+          </thead>
+          <tbody id="courseTableBody">
+            <tr><td colspan="6" class="text-center text-charcoal/30 py-8">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal border-t border-white/5 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <p class="text-white/30 text-sm">© 2026 Student Feedback Analyzer · Built with Node.js, MySQL &amp; ❤️</p>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

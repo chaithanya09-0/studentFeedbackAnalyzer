@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Feedback Analyzer</title>
+  <meta name="description" content="About the AI-powered Student Feedback Analyzer — mission, technology, and process.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="tailwind-theme.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-cream text-charcoal font-sans min-h-screen">
+
+  <!-- Nav -->
+  <nav class="bg-cream border-b border-charcoal/8 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="index.html" class="font-sans font-semibold text-sm uppercase tracking-[0.2em] text-charcoal">Feedback Analyzer</a>
+      <ul class="hidden md:flex items-center gap-8 text-sm">
+        <li><a href="index.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Home</a></li>
+        <li><a href="submit-feedback.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Submit&nbsp;Feedback</a></li>
+        <li><a href="dashboard.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Dashboard</a></li>
+        <li><a href="analytics.html" class="text-charcoal/50 hover:text-charcoal transition-colors">Analytics</a></li>
+        <li><a href="about.html" class="text-charcoal font-semibold">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero (Cream) -->
+  <section class="bg-cream pt-20 pb-16">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h1 class="font-serif text-6xl md:text-7xl uppercase tracking-tight">
+        About This<br><span class="italic">Project</span>
+      </h1>
+      <p class="text-charcoal/50 mt-5 max-w-lg mx-auto">An AI-inspired academic feedback system built for educational decision-making</p>
+    </div>
+  </section>
+
+  <!-- Mission + Problem (Charcoal) -->
+  <section class="bg-charcoal py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="section-marker text-white/35 mb-12">
+        <span>(01)</span>
+        <span>Our Mission</span>
+      </div>
+      <div class="grid md:grid-cols-2 gap-16">
+        <div>
+          <p class="font-sans text-white/75 text-lg leading-relaxed">
+            To transform the way educational institutions collect, analyze, and act upon student feedback — making education more responsive, data-driven, and student-centered.
+          </p>
+          <div class="mt-12 pt-8 border-t border-white/10">
+            <h3 class="font-serif text-2xl text-white italic mb-4">The Problem</h3>
+            <p class="text-white/55 leading-relaxed">
+              Educational institutions collect large volumes of student feedback, but analyzing it manually is time-consuming and error-prone. Important insights can be missed, and patterns may go unnoticed.
+            </p>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-serif text-2xl text-white italic mb-6">Our Solution</h3>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3 text-white/70">
+              <span class="text-sage mt-0.5">→</span>
+              <span>Collects feedback through easy-to-use web forms</span>
+            </div>
+            <div class="flex items-start gap-3 text-white/70">
+              <span class="text-sage mt-0.5">→</span>
+              <span>Classifies sentiment using rule-based logic + HuggingFace ML</span>
+            </div>
+            <div class="flex items-start gap-3 text-white/70">
+              <span class="text-sage mt-0.5">→</span>
+              <span>Stores all data persistently in MySQL</span>
+            </div>
+            <div class="flex items-start gap-3 text-white/70">
+              <span class="text-sage mt-0.5">→</span>
+              <span>Identifies trends using real-time Chart.js charts</span>
+            </div>
+            <div class="flex items-start gap-3 text-white/70">
+              <span class="text-sage mt-0.5">→</span>
+              <span>Presents actionable insights through interactive dashboards</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/10">
+            <div>
+              <p class="text-3xl font-serif font-light text-white">0</p>
+              <p class="text-xs text-white/40 mt-1">Feedbacks analyzed</p>
+            </div>
+            <div>
+              <p class="text-3xl font-serif font-light text-white">0</p>
+              <p class="text-xs text-white/40 mt-1">Courses tracked</p>
+            </div>
+            <div>
+              <p class="text-3xl font-serif font-light text-white">0</p>
+              <p class="text-xs text-white/40 mt-1">User roles</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (Cream) -->
+  <section class="bg-cream py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="section-marker text-charcoal/35 mb-6">
+        <span>(02)</span>
+        <span>Process</span>
+      </div>
+      <h2 class="font-serif text-5xl md:text-6xl uppercase tracking-tight mt-2">
+        How It<br><span class="italic">Works</span>
+      </h2>
+      <div class="grid md:grid-cols-4 gap-px bg-charcoal/10 border border-charcoal/10 mt-16">
+        <div class="bg-cream p-8">
+          <div class="w-10 h-10 border border-charcoal/15 flex items-center justify-center text-sm font-semibold text-charcoal/60 mb-6">1</div>
+          <h3 class="font-serif text-xl mb-2">Collection</h3>
+          <p class="text-sm text-charcoal/55 leading-relaxed">Students submit structured feedback through web forms including course, instructor, ratings, and comments.</p>
+        </div>
+        <div class="bg-cream p-8">
+          <div class="w-10 h-10 border border-charcoal/15 flex items-center justify-center text-sm font-semibold text-charcoal/60 mb-6">2</div>
+          <h3 class="font-serif text-xl mb-2">Analysis</h3>
+          <p class="text-sm text-charcoal/55 leading-relaxed">Rule-based engine with HuggingFace ML fallback classifies sentiment using keyword dictionaries and rating weighting.</p>
+        </div>
+        <div class="bg-cream p-8">
+          <div class="w-10 h-10 border border-charcoal/15 flex items-center justify-center text-sm font-semibold text-charcoal/60 mb-6">3</div>
+          <h3 class="font-serif text-xl mb-2">Storage</h3>
+          <p class="text-sm text-charcoal/55 leading-relaxed">Feedback, sentiment, confidence score, and metadata are stored in MySQL via a Node.js/Express REST API.</p>
+        </div>
+        <div class="bg-cream p-8">
+          <div class="w-10 h-10 border border-charcoal/15 flex items-center justify-center text-sm font-semibold text-charcoal/60 mb-6">4</div>
+          <h3 class="font-serif text-xl mb-2">Visualization</h3>
+          <p class="text-sm text-charcoal/55 leading-relaxed">Trend lines, doughnut charts, bar graphs, and insight cards show student satisfaction at a glance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack (Charcoal) -->
+  <section class="bg-charcoal py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="section-marker text-white/35 mb-6">
+        <span>(03)</span>
+        <span>Tech Stack</span>
+      </div>
+      <h2 class="font-serif text-4xl uppercase tracking-tight text-white mt-2 mb-12">
+        Built <span class="italic">With</span>
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">Node.js</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">Express.js</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">MySQL</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">Tailwind CSS</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">Chart.js</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">HuggingFace API</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">Vanilla JS</span>
+        <span class="border border-white/15 text-white/70 rounded-full px-5 py-2.5 text-sm">REST API</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact (Cream) -->
+  <section class="bg-cream py-24">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="font-serif text-4xl md:text-5xl text-charcoal italic">Get in Touch</h2>
+      <p class="text-charcoal/50 mt-4">Have questions, suggestions, or want to contribute?</p>
+      <a href="mailto:nnm23cs048@nmamit.in"
+         class="inline-block bg-sage text-charcoal rounded-full px-10 py-4 text-sm font-semibold mt-8 hover:bg-sage-dark transition-colors">
+        nnm23cs048@nmamit.in
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal border-t border-white/5 py-8">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <p class="text-white/30 text-sm">© 2026 Student Feedback Analyzer · Built with Node.js, MySQL &amp; ❤️</p>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+</body>
+</html>

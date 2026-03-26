@@ -1,0 +1,92 @@
+/*
+ * styles.css — Editorial Design System
+ * Cream (#F4F1EA) + Charcoal (#1A1C1B) + Sage (#A5C0B3)
+ * Inspired by: dribbble.com/shots/26558410
+ */
+
+/* ─── Base ─────────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+/* ─── Scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #1A1C1B; }
+::-webkit-scrollbar-thumb { background: #A5C0B3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8DAA9D; }
+
+/* ─── Canvas ───────────────────────────────────────────────────────── */
+canvas { display: block; }
+
+/* ─── Subtle Entrance ─────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+/* ─── Section Marker ───────────────────────────────────────────────── */
+.section-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ─── Rating Buttons (Submit Feedback — cream bg) ──────────────────── */
+.rating-btn {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(26, 28, 27, 0.15);
+  background: transparent;
+  color: rgba(26, 28, 27, 0.45);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 600; font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.rating-btn:hover {
+  border-color: #A5C0B3;
+  color: #1A1C1B;
+}
+.rating-btn.active {
+  border-color: #A5C0B3;
+  background: #A5C0B3;
+  color: #1A1C1B;
+  font-weight: 700;
+}
+
+/* ─── Question Row ─────────────────────────────────────────────────── */
+.question-row {
+  transition: background 0.2s ease;
+  padding: 14px 12px;
+  margin: 0 -12px;
+}
+.question-row:hover {
+  background: rgba(26, 28, 27, 0.03);
+}
+
+/* ─── Chart Container ──────────────────────────────────────────────── */
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+/* ─── Process Step (homepage) ──────────────────────────────────────── */
+.process-step {
+  transition: background 0.25s ease;
+}
+.process-step:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ─── Print ────────────────────────────────────────────────────────── */
+@media print {
+  nav, footer, button { display: none !important; }
+  body { background: white !important; color: black !important; }
+}
