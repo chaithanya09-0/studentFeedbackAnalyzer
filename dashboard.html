@@ -143,6 +143,43 @@
       </div>
     </div>
 
+    <!-- Admin Settings Panel (visible only to admins) -->
+    <div id="adminSettingsPanel" class="hidden border border-charcoal/10 p-6 bg-white/50">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-2xl">⚙️</span>
+        <h3 class="font-serif text-xl text-charcoal italic">Admin Settings</h3>
+      </div>
+
+      <div class="border border-charcoal/8 p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-charcoal">Feedback Submission Password</p>
+            <p class="text-xs text-charcoal/45 mt-0.5">Students must enter this password to submit feedback</p>
+          </div>
+          <span id="adminPwdStatus" class="text-xs font-medium px-3 py-1 bg-sage/15 text-sage-darker border border-sage/20">Active</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-charcoal/30 text-sm">🔑</span>
+            <input type="password" id="adminFeedbackPassword"
+                   class="w-full bg-white border border-charcoal/12 text-charcoal pl-9 pr-10 py-2.5 text-sm focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage"
+                   placeholder="Loading...">
+            <button type="button" id="adminTogglePwd"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/35 hover:text-charcoal/60 transition-colors text-sm"
+                    title="Toggle visibility">👁️</button>
+          </div>
+          <button id="adminSavePwd"
+                  class="bg-sage text-charcoal px-5 py-2.5 text-sm font-semibold hover:bg-sage-dark transition-colors rounded-full whitespace-nowrap disabled:opacity-50">
+            Save
+          </button>
+        </div>
+
+        <p id="adminPwdMsg" class="text-xs text-charcoal/45 hidden"></p>
+        <p class="text-xs text-charcoal/35">💡 Set to empty to disable password protection (not recommended)</p>
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer -->
@@ -155,5 +192,6 @@
   <script src="js/auth.js"></script>
   <script src="js/api.js"></script>
   <script src="js/dashboard.js"></script>
+  <script src="js/admin-settings.js"></script>
 </body>
 </html>

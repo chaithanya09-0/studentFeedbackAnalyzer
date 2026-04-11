@@ -1,5 +1,5 @@
 /**
- * submit-feedback.js — Form logic + sentiment preview (Editorial cream theme)
+ * submit-feedback.js — Form logic + sentiment preview + password gate
  */
 document.addEventListener('DOMContentLoaded', () => {
   const form         = document.getElementById('feedbackForm');
@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Block staff from submitting
   if (typeof isLoggedIn === 'function' && isLoggedIn()) {
     const user = getUser();
+    const feedbackContent = document.getElementById('feedbackContent');
+    const passwordGate    = document.getElementById('passwordGate');
+    if (passwordGate) passwordGate.classList.add('hidden');
+    if (feedbackContent) feedbackContent.classList.remove('hidden');
     if (form) {
       form.innerHTML = `
         <div class="flex flex-col items-center text-center py-14 space-y-4">
@@ -30,9 +34,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const instrSelect = document.getElementById('instructor');
-  let previewTimer  = null;
+  const instrSelect       = document.getElementById('instructor');
+  const feedbackContent   = document.getElementById('feedbackContent');
+  const passwordGate      = document.getElementById('passwordGate');
+  const gateInput         = document.getElementById('gatePasswordInput');
+  const gateToggle        = document.getElementById('gateToggleVisibility');
+  const gateSubmitBtn     = document.getElementById('gateSubmitBtn');
+  const gateError         = document.getElementById('gateErrorMsg');
+  let previewTimer        = null;
+  let verifiedPassword    = null;
 
+  // ── Password Gate Logic ─────────────────────────────────────────────────────
+  (async () => {
+    try {
+      const status = await apiFetch('/feedback/password-status');
+      if (status.required) {
+        // Show gate, hide content
+        if (passwordGate) passwordGate.classList.remove('hidden');
+        if (feedbackContent) feedbackContent.classList.add('hidden');
+      } else {
+        // No password needed — show content directly
+        if (passwordGate) passwordGate.classList.add('hidden');
+        if (feedbackContent) feedbackContent.classList.remove('hidden');
+      }
+    } catch {
+      // If check fails, show content (fail open)
+      if (passwordGate) passwordGate.classList.add('hidden');
+      if (feedbackContent) feedbackContent.classList.remove('hidden');
+    }
+  })();
+
+  // Gate: toggle visibility
+  if (gateToggle && gateInput) {
+    gateToggle.addEventListener('click', () => {
+      const isPassword = gateInput.type === 'password';
+      gateInput.type = isPassword ? 'text' : 'password';
+      gateToggle.textContent = isPassword ? '🙈' : '👁️';
+    });
+  }
+
+  // Gate: submit password
+  if (gateSubmitBtn && gateInput) {
+    const attemptGateUnlock = async () => {
+      const pwd = gateInput.value.trim();
+      if (!pwd) { gateInput.classList.add('ring-1', 'ring-red-400'); return; }
+      gateInput.classList.remove('ring-1', 'ring-red-400');
+      gateSubmitBtn.disabled = true;
+      gateSubmitBtn.textContent = 'Verifying...';
+      if (gateError) gateError.classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API_BASE}/feedback/verify-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ feedbackPassword: pwd })
+        });
+        const data = await res.json();
+        if (data.valid) {
+          verifiedPassword = pwd;
+          if (passwordGate) passwordGate.classList.add('hidden');
+          if (feedbackContent) feedbackContent.classList.remove('hidden');
+        } else {
+          if (gateError) { gateError.textContent = data.error || 'Incorrect password. Please try again.'; gateError.classList.remove('hidden'); }
+          gateInput.classList.add('ring-1', 'ring-red-400');
+        }
+      } catch {
+        if (gateError) { gateError.textContent = 'Connection error. Please try again.'; gateError.classList.remove('hidden'); }
+      } finally {
+        gateSubmitBtn.disabled = false;
+        gateSubmitBtn.textContent = 'Access Feedback Form';
+      }
+    };
+
+    gateSubmitBtn.addEventListener('click', attemptGateUnlock);
+    gateInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptGateUnlock(); });
+  }
+
+  // ── Course / Instructor Mapping ─────────────────────────────────────────────
   const courseTeachers = {
     oop:['Dr. Sharma','Prof. Mehta','Dr. Kapoor'], os:['Dr. Rao','Prof. Iyer'],
     cn:['Dr. Nair','Prof. Singh','Dr. Joshi'], aiml:['Dr. Verma','Prof. Pandey'],
@@ -121,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const payload = {};
       fd.forEach((v,k) => { payload[k] = v; });
       for (let i=1; i<=10; i++) payload[`q${i}`] = ratingState[`q${i}`] || 0;
+      // Attach the verified password for backend double-check
+      if (verifiedPassword) payload.feedbackPassword = verifiedPassword;
 
       try {
         const res = await apiFetch('/feedback', { method:'POST', body: JSON.stringify(payload) });

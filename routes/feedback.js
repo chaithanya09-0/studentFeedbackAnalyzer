@@ -4,11 +4,58 @@ const db      = require('../db');
 const { analyzeSentiment, analyzeSentimentSync } = require('../sentiment');
 const { requireAuth } = require('../middleware/auth');
 
-// ─── POST /api/feedback ── Submit new feedback (NO auth required) ─────────────
+// ─── GET /api/feedback/public-stats ── Public stats (no auth) ─────────────────
+router.get('/public-stats', async (req, res) => {
+  try {
+    const [[{ total }]]   = await db.execute('SELECT COUNT(*) AS total FROM feedbacks');
+    const [[{ courses }]] = await db.execute('SELECT COUNT(DISTINCT course) AS courses FROM feedbacks');
+    const [[{ roles }]]   = await db.execute('SELECT COUNT(DISTINCT role) AS roles FROM users');
+    res.json({ total, courses, roles });
+  } catch (err) {
+    console.error('GET /api/feedback/public-stats error:', err);
+    res.json({ total: 0, courses: 0, roles: 0 });
+  }
+});
+
+// ─── GET /api/feedback/password-status ── Check if password is required ───────
+router.get('/password-status', async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      "SELECT setting_value FROM settings WHERE setting_key = 'feedback_password'"
+    );
+    const hasPassword = rows.length > 0 && rows[0].setting_value.trim() !== '';
+    res.json({ required: hasPassword });
+  } catch (err) {
+    console.error('GET /api/feedback/password-status error:', err);
+    res.json({ required: false });
+  }
+});
+
+// ─── POST /api/feedback/verify-password ── Verify feedback password ───────────
+router.post('/verify-password', async (req, res) => {
+  try {
+    const { feedbackPassword } = req.body;
+    const [rows] = await db.execute(
+      "SELECT setting_value FROM settings WHERE setting_key = 'feedback_password'"
+    );
+    if (rows.length === 0 || rows[0].setting_value.trim() === '') {
+      return res.json({ valid: true });
+    }
+    if (feedbackPassword && feedbackPassword === rows[0].setting_value) {
+      return res.json({ valid: true });
+    }
+    res.json({ valid: false, error: 'Incorrect password. Please try again.' });
+  } catch (err) {
+    console.error('POST /api/feedback/verify-password error:', err);
+    res.status(500).json({ valid: false, error: 'Server error.' });
+  }
+});
+
+// ─── POST /api/feedback ── Submit new feedback (password required) ─────────────
 router.post('/', async (req, res) => {
   try {
     const {
-      course, instructor, feedback,
+      course, instructor, feedback, feedbackPassword,
       q1, q2, q3, q4, q5, q6, q7, q8, q9, q10
     } = req.body;
     const category = req.body.category || 'general';
@@ -16,6 +63,16 @@ router.post('/', async (req, res) => {
     // Validate required fields
     if (!course || !feedback) {
       return res.status(400).json({ error: 'Please fill in all required fields (Course, Feedback).' });
+    }
+
+    // Validate feedback password
+    const [pwRows] = await db.execute(
+      "SELECT setting_value FROM settings WHERE setting_key = 'feedback_password'"
+    );
+    if (pwRows.length > 0 && pwRows[0].setting_value.trim() !== '') {
+      if (!feedbackPassword || feedbackPassword !== pwRows[0].setting_value) {
+        return res.status(403).json({ error: 'Incorrect feedback password. Please enter the password provided by your instructor.' });
+      }
     }
 
     // Parse and validate all 10 question ratings

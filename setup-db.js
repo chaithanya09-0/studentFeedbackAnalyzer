@@ -75,6 +75,8 @@ async function setup() {
   console.log(`✅ Seeded ${users.length} user accounts!`);
   console.log('   Admin:   admin@college.edu / admin123');
   console.log('   Teachers: <name>@college.edu / teacher123\n');
+  console.log('✅ Settings table created with default feedback password: feedback2026');
+  console.log('   Admin can change this from the Dashboard.\n');
   console.log('🚀 Setup complete! Now run: node server.js');
   console.log('   Then open: http://localhost:3000\n');
 

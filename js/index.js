@@ -1,21 +1,16 @@
 /**
- * index.js — Live animated stats on homepage
- * Note: /analytics/summary requires auth, so stats only animate when logged in
+ * index.js — Live animated stats on homepage & about page
+ * Fetches public stats (no auth needed) for total feedbacks, courses, roles
  */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Only fetch stats if user is logged in (analytics endpoint requires auth)
-  if (typeof isLoggedIn !== 'function' || !isLoggedIn()) return;
-
+  // Always fetch public stats (no auth required)
   try {
-    const res  = await apiFetch('/analytics/summary');
-    const data = res.data;
-
-    animateCount('stat-total',    data.total);
-    animateCount('stat-positive', data.positive_pct, '%');
-    animateCount('stat-courses',  data.courses_count);
-    animateCount('stat-rating',   Math.round((data.avg_rating / 5) * 100), '%');
+    const stats = await apiFetch('/feedback/public-stats');
+    animateCount('stat-total',   stats.total);
+    animateCount('stat-courses', stats.courses);
+    animateCount('stat-roles',   stats.roles);
   } catch {
-    // server not running or auth error — leave placeholder zeros
+    // server not running — leave placeholder zeros
   }
 });
 

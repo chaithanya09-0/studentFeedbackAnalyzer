@@ -6,7 +6,7 @@ const router  = express.Router();
 const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
 const db      = require('../db');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
@@ -85,4 +85,37 @@ router.get('/me', requireAuth, (req, res) => {
   });
 });
 
+// ─── GET /api/auth/feedback-password ── Admin: get current feedback password ──
+router.get('/feedback-password', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      "SELECT setting_value FROM settings WHERE setting_key = 'feedback_password'"
+    );
+    const password = rows.length > 0 ? rows[0].setting_value : '';
+    res.json({ success: true, password });
+  } catch (err) {
+    console.error('GET /api/auth/feedback-password error:', err);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+// ─── PUT /api/auth/feedback-password ── Admin: update feedback password ───────
+router.put('/feedback-password', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (password === undefined || password === null) {
+      return res.status(400).json({ error: 'Password is required.' });
+    }
+    await db.execute(
+      "INSERT INTO settings (setting_key, setting_value) VALUES ('feedback_password', ?) ON DUPLICATE KEY UPDATE setting_value = ?",
+      [password.trim(), password.trim()]
+    );
+    res.json({ success: true, message: 'Feedback password updated successfully.' });
+  } catch (err) {
+    console.error('PUT /api/auth/feedback-password error:', err);
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
 module.exports = router;
+
